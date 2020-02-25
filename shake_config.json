@@ -16,7 +16,7 @@
     "src_vocab": "data/shakespeare/vocab.txt",
     "tgt_vocab": "data/shakespeare/vocab.txt",
     "share_vocab": true,
-    "attribute_vocab": "data/shakespeare/ngram.5.attribute.txt",
+    "attribute_vocab": "data/shakespeare/ngram.15.attribute.txt",
     "ngram_attributes": true,
     "batch_size": 256,
     "max_len": 50,
