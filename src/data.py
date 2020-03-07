@@ -140,7 +140,7 @@ def read_nmt_data(src, config, tgt, attribute_vocab, train_src=None, train_tgt=N
 
     src_lines = [l.strip().lower().split() for l in open(src, 'r')]
     src_lines, src_content, src_attribute = list(zip(
-        *[extract_attributes(line, pre_attr, pre_attr) for line in src_lines]
+        *[extract_attributes(line, pre_attr, ngram_attributes) for line in src_lines]
     ))
     src_tok2id, src_id2tok = build_vocab_maps(config['data']['src_vocab'])
     # train time: just pick attributes that are close to the current (using word distance)
@@ -162,7 +162,7 @@ def read_nmt_data(src, config, tgt, attribute_vocab, train_src=None, train_tgt=N
 
     tgt_lines = [l.strip().lower().split() for l in open(tgt, 'r')] if tgt else None
     tgt_lines, tgt_content, tgt_attribute = list(zip(
-        *[extract_attributes(line, post_attr, post_attr) for line in tgt_lines]
+        *[extract_attributes(line, post_attr, ngram_attributes) for line in tgt_lines]
     ))
     tgt_tok2id, tgt_id2tok = build_vocab_maps(config['data']['tgt_vocab'])
     # train time: just pick attributes that are close to the current (using word distance)
