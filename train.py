@@ -210,7 +210,7 @@ for epoch in range(start_epoch, config['training']['epochs']):
 
     writer.add_scalar('eval/loss', dev_loss, epoch)
 
-    if args.bleu and epoch >= config['training'].get('inference_start_epoch', 1):
+    if args.bleu:
         cur_metric, edit_distance, inputs, preds, golds, auxs = evaluation.inference_metrics(
             model, src_test, tgt_test, config)
 
