@@ -131,7 +131,7 @@ epoch_loss = []
 start_since_last_report = time.time()
 words_since_last_report = 0
 losses_since_last_report = []
-best_metric = 0.0
+best_metric = 1000.0
 best_epoch = 0
 cur_metric = 0.0 # log perplexity or BLEU
 num_examples = min(len(src['content']), len(tgt['content']))
@@ -139,7 +139,7 @@ num_batches = num_examples / batch_size
 
 STEP = 0
 for epoch in range(start_epoch, config['training']['epochs']):
-    if cur_metric > best_metric:
+    if cur_metric < best_metric:
         # rm old checkpoint
         for ckpt_path in glob.glob(working_dir + '/model.*'):
             os.system("rm %s" % ckpt_path)
@@ -227,6 +227,21 @@ for epoch in range(start_epoch, config['training']['epochs']):
         writer.add_scalar('eval/bleu', cur_metric, epoch)
 
     else:
+        cur_metric, edit_distance, inputs, preds, golds, auxs = evaluation.inference_metrics(
+            model, src_test, tgt_test, config)
+
+        with open(working_dir + '/auxs.%s' % epoch, 'w') as f:
+            f.write('\n'.join(auxs) + '\n')
+        with open(working_dir + '/inputs.%s' % epoch, 'w') as f:
+            f.write('\n'.join(inputs) + '\n')
+        with open(working_dir + '/preds.%s' % epoch, 'w') as f:
+            f.write('\n'.join(preds) + '\n')
+        with open(working_dir + '/golds.%s' % epoch, 'w') as f:
+            f.write('\n'.join(golds) + '\n')
+
+        writer.add_scalar('eval/edit_distance', edit_distance, epoch)
+        writer.add_scalar('eval/bleu', cur_metric, epoch)
+        
         cur_metric = dev_loss
 
     model.train()
