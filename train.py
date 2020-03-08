@@ -139,16 +139,6 @@ num_batches = num_examples / batch_size
 
 STEP = 0
 for epoch in range(start_epoch, config['training']['epochs']):
-    if cur_metric < best_metric:
-        # rm old checkpoint
-        for ckpt_path in glob.glob(working_dir + '/model.*'):
-            os.system("rm %s" % ckpt_path)
-        # replace with new checkpoint
-        torch.save(model.state_dict(), working_dir + '/model.%s.ckpt' % epoch)
-
-        best_metric = cur_metric
-        best_epoch = epoch - 1
-
     losses = []
     for i in range(0, num_examples, batch_size):
 
@@ -250,6 +240,16 @@ for epoch in range(start_epoch, config['training']['epochs']):
         cur_metric, (time.time() - start)))
     avg_loss = np.mean(epoch_loss)
     epoch_loss = []
+    
+    if cur_metric < best_metric:
+        # rm old checkpoint
+        for ckpt_path in glob.glob(working_dir + '/model.*'):
+            os.system("rm %s" % ckpt_path)
+        # replace with new checkpoint
+        torch.save(model.state_dict(), working_dir + '/model.%s.ckpt' % epoch)
+
+        best_metric = cur_metric
+        best_epoch = epoch - 1
 
 writer.close()
 
