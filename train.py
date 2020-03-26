@@ -241,7 +241,7 @@ for epoch in range(start_epoch, config['training']['epochs']):
     avg_loss = np.mean(epoch_loss)
     epoch_loss = []
     
-    if cur_metric < best_metric:
+    if cur_metric > best_metric:
         # rm old checkpoint
         for ckpt_path in glob.glob(working_dir + '/model.*'):
             os.system("rm %s" % ckpt_path)
